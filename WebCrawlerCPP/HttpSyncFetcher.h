@@ -18,7 +18,7 @@ namespace WebCrawler
 		HttpSyncFetcher(IResponseHandler *handler);
 		~HttpSyncFetcher();
 
-		virtual void Fetch(const std::string &url) override;
+		virtual void Fetch(Url url) override;
 
 	private:
 		IResponseHandler *handler_;

@@ -126,6 +126,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>D:\dev\Libraries\boost_1_67_0;C:\Program Files (x86)\OpenSSL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -154,6 +155,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="HtmlDocumentParser.h" />
     <ClInclude Include="ResponseHandler.h" />
     <ClInclude Include="HttpSyncFetcher.h" />
     <ClInclude Include="IResponseHandler.h" />
@@ -165,6 +167,7 @@
     <ClInclude Include="HttpResponse.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="HtmlDocumentParser.cpp" />
     <ClCompile Include="ResponseHandler.cpp" />
     <ClCompile Include="HttpSyncFetcher.cpp" />
     <ClCompile Include="pch.cpp">

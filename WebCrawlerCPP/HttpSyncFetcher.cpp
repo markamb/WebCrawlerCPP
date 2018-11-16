@@ -113,40 +113,35 @@ namespace WebCrawler
 
 	}
 
-	void HttpSyncFetcher::Fetch(const std::string & urlStr)
+	void HttpSyncFetcher::Fetch(Url url)
 	{
 		using namespace std;
 
 		try
 		{
-			Url  url(urlStr);
 			auto  response { url.GetProtocol() == Url::HTTPS ? LoadDocumentSSL(url) : LoadDocument(url) };
 			if (!response)
 			{
-				std::cerr << "Unknown response returned for : " << urlStr << std::endl;	
+				std::cerr << "Unknown response returned for : " << url << std::endl;	
 			}
 			else if (response->IsRedirect())
 			{
 				auto redirectResponse{ dynamic_pointer_cast<HttpRedirectResponse>(response) };
 				if (redirectResponse && handler_ != nullptr)
-					handler_->OnRedirect(urlStr, redirectResponse);
+					handler_->OnRedirect(url, redirectResponse);
 			}
 			else if (response->HasDocument())
 			{
 				auto docResponse{ dynamic_pointer_cast<HttpDocumentResponse>(response) };
 				if (docResponse && handler_ != nullptr)
-					handler_->OnSuccess(urlStr, docResponse);
+					handler_->OnSuccess(url, docResponse);
 			}
 			else if (response->IsClientError() || response->IsServerError())
 			{
 				auto errorResponse{ dynamic_pointer_cast<HttpErrorResponse>(response) };
 				if (errorResponse && handler_ != nullptr)
-					handler_->OnError(urlStr, errorResponse);
+					handler_->OnError(url, errorResponse);
 			}
-		}
-		catch (UrlException &e)
-		{
-			std::cerr << "Attempt to fetch invalid URL: " << e.what() << std::endl;
 		}
 		catch (boost::system::system_error &e)
 		{
@@ -154,11 +149,11 @@ namespace WebCrawler
 		}
 		catch (HttpResponseException &e)
 		{
-			std::cerr << "Invalid document loaded (" << urlStr << ") : " << e.what() << std::endl;
+			std::cerr << "Invalid document loaded (" << url << ") : " << e.what() << std::endl;
 		}
 		catch (std::exception& e)
 		{
-			std::cerr << "Error processing Document (" << urlStr << "): " << e.what() << std::endl;
+			std::cerr << "Error processing Document (" << url << "): " << e.what() << std::endl;
 		}
 	}
 

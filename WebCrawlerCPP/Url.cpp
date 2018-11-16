@@ -3,33 +3,55 @@
 #include <algorithm>
 #include <regex>
 #include <iostream>
+#include <sstream>
+#include <boost/functional/hash.hpp>
 
 namespace WebCrawler
 {
 
-	Url::Url(std::string url) 
+	Url::Url(const std::string &url) 
 	{
-		Parse(std::move(url));
+		Parse(url);
 	}
 
-	Url::Url(const Url &url, Protocol newProtocol) : Url(url)
+	Url	Url::MakeRelative(const std::string &relativeUrlStr) const
 	{
-		protocol_ = newProtocol;
-		port_ = DefaultPort(protocol_);
+		// if empty just clone this
+		if (relativeUrlStr.empty())
+			return Url(*this);
+
+		// if starts with "/" assume a relative path
+		if (relativeUrlStr[0] == '/')
+		{
+			Url newUrl(*this);
+			newUrl.path_ = relativeUrlStr;
+			return newUrl;
+		}
+
+		// else just assume not a relative path and string is a full Url
+		Url newUrl(relativeUrlStr);
+		return newUrl;
 	}
 
-	Url::Url(const Url &url, std::string newPath) : Url(url)
+	const char * Url::GetProtocolStr() const
 	{
-		path_ = newPath;
+		switch (protocol_)
+		{
+		case HTTPS:
+			return "https";
+		case HTTP:
+			return "http";
+		default:
+			return "<Unknown>";
+		}
+		return nullptr;
 	}
 
-	void Url::Parse(std::string url) 
+	void Url::Parse(const std::string &url) 
 	{
 		using namespace std;
 
 		// A fairly simple regular expression to split the URL - requires additional processing of parts but doing all in one RegEx in extreemly error prone
-//		const char *REG_EXP = R"(^(.*:)//([A-Za-z0-9\-\.]+)(:[0-9]+)?(.*)$)";
-//		const char *REG_EXP = R"(^([A-Za-z]*:)?(//)?([A-Za-z0-9\-\.]+)(:[0-9]+)?(.*)$)";
 		const char *REG_EXP = R"(^([A-Za-z]+:)?(//)?([A-Za-z0-9\-\.]+)(:[0-9]+)?(.*)$)";
 		std::regex  regEx(REG_EXP);
 		std::smatch match;
@@ -87,6 +109,32 @@ namespace WebCrawler
 			return "443";
 		};
 		return std::string();
+	}
+
+	bool Url::operator==(const Url &u2) const
+	{
+		if (this == &u2)
+			return true;
+		if (protocol_ != u2.protocol_)
+			return false;
+		if (host_ != u2.host_)
+			return false;
+		if (port_ != u2.port_)
+			return false;
+		if (path_ != u2.path_)
+			return false;
+		return true;
+	}
+
+	size_t Url::GetHash() const
+	{
+		using namespace std;
+		size_t seed = 0;
+		boost::hash_combine(seed, std::hash<int>()(static_cast<int>(protocol_)));
+		boost::hash_combine(seed, std::hash<string>()(port_));
+		boost::hash_combine(seed, std::hash<string>()(host_));
+		boost::hash_combine(seed, std::hash<string>()(path_));
+		return seed;
 	}
 
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include "Url.h"
 
 namespace WebCrawler
 {
@@ -16,7 +17,7 @@ namespace WebCrawler
 		IFetcher() {};
 		virtual ~IFetcher() {};
 
-		virtual void Fetch(const std::string &url) = 0;
+		virtual void Fetch(Url url) = 0;
 	};
 
 }

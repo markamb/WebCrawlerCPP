@@ -16,9 +16,9 @@ namespace WebCrawler
 		virtual ~ResponseHandler();
 
 		// IDocumentHandler methods
-		virtual void OnSuccess(std::string urlStr, std::shared_ptr<HttpDocumentResponse> document) override;
-		virtual void OnRedirect(std::string originalUrl, std::shared_ptr<HttpRedirectResponse> document) override;
-		virtual void OnError(std::string originalUrl, std::shared_ptr<HttpErrorResponse> error) override;
+		virtual void OnSuccess(Url srcUrl, std::shared_ptr<HttpDocumentResponse> document) override;
+		virtual void OnRedirect(Url srcUrl, std::shared_ptr<HttpRedirectResponse> document) override;
+		virtual void OnError(Url srcUrl, std::shared_ptr<HttpErrorResponse> error) override;
 
 		// New methods
 		size_t	 SuccessCount() const { return successCount_; }

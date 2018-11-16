@@ -3,6 +3,7 @@
 #include <string>
 #include <memory>
 #include "HttpResponse.h"
+#include "Url.h"
 
 namespace WebCrawler
 {
@@ -16,11 +17,11 @@ namespace WebCrawler
 		virtual ~IResponseHandler() {};
 
 		// Called when a document is sucessfully loaded
-		virtual void OnSuccess(std::string urlStr, std::shared_ptr<HttpDocumentResponse> document) = 0;
+		virtual void OnSuccess(Url srcUrl, std::shared_ptr<HttpDocumentResponse> document) = 0;
 		// Called when a redirect is recieved
-		virtual void OnRedirect(std::string originalUrl, std::shared_ptr<HttpRedirectResponse> document) = 0;
+		virtual void OnRedirect(Url srcUrl, std::shared_ptr<HttpRedirectResponse> document) = 0;
 		// Called when an error is returned from the server
-		virtual void OnError(std::string originalUrl, std::shared_ptr<HttpErrorResponse> error) = 0;
+		virtual void OnError(Url srcUrl, std::shared_ptr<HttpErrorResponse> error) = 0;
 	};
 }
 

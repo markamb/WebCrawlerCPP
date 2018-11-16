@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include "Url.h"
 
 namespace WebCrawler
 {
@@ -14,7 +15,8 @@ namespace WebCrawler
 
 		// Register a URL to be crawled		
 		virtual void AddURL(const std::string &url) = 0;
-		virtual void AddURLs(const std::vector<std::string> &urls) = 0;
+		virtual void AddURL(const Url &url) = 0;
+		virtual void AddURLs(const std::vector<Url> &urls) = 0;
 	};
 }
 
